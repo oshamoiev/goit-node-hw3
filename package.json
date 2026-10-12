@@ -1,11 +1,11 @@
 {
-  "name": "Boilerplate-code",
+  "name": "billboard",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "tsx app.ts",
-    "dev": "tsx --watch app.ts",
+    "dev": "tsx watch app.ts",
     "lint": "biome lint .",
     "format": "biome format --write .",
     "check": "biome check .",

@@ -1,7 +1,7 @@
 import {
   extendZodWithOpenApi,
-  OpenApiGeneratorV3,
   OpenAPIRegistry,
+  OpenApiGeneratorV3,
 } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
 
@@ -21,9 +21,9 @@ export function generateOpenApiDocument() {
   return generator.generateDocument({
     openapi: "3.0.0",
     info: {
-      title: "Your API",
+      title: "Billboard API",
       version: "1.0.0",
-      description: "REST API for your project",
+      description: "REST API for Billboard project",
     },
     servers: [{ url: "http://localhost:3000" }],
   });
