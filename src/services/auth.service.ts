@@ -40,7 +40,7 @@ export const registerUser = async ({
   return { user, tokens };
 };
 
-export const loginUser = async ({ username, password }) => {
+export const loginUser = async ({ username, password }: { username: string; password: string }) => {
   const user = await prisma.user.findUnique({
     where: { username },
   });
@@ -77,4 +77,10 @@ export const rotateRefreshToken = async (refreshTokenString: string) => {
   await prisma.refreshToken.delete({ where: { id: storedRefreshToken.id } });
 
   return await createTokens(storedRefreshToken.userId);
+};
+
+export const removeRefreshToken = async (token: string) => {
+  await prisma.refreshToken.deleteMany({
+    where: { token: token },
+  });
 };
