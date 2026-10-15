@@ -59,3 +59,22 @@ export const loginUser = async ({ username, password }) => {
 
   return { user, tokens };
 };
+
+export const rotateRefreshToken = async (refreshTokenString: string) => {
+  const storedRefreshToken = await prisma.refreshToken.findFirst({
+    where: { token: refreshTokenString },
+  });
+
+  if (!storedRefreshToken) {
+    throw createHttpError(401, "Invalid refresh token");
+  }
+
+  if (new Date() > storedRefreshToken.expiresAt) {
+    await prisma.refreshToken.delete({ where: { id: storedRefreshToken.id } });
+    throw createHttpError(401, "Refresh token expired");
+  }
+
+  await prisma.refreshToken.delete({ where: { id: storedRefreshToken.id } });
+
+  return await createTokens(storedRefreshToken.userId);
+};
