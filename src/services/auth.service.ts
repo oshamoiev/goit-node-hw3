@@ -1,6 +1,6 @@
 import createHttpError from "http-errors";
 import prisma from "../../prisma/client.ts";
-import { hashPassword } from "./password.service.ts";
+import { comparePassword, hashPassword } from "./password.service.ts";
 import { createTokens } from "./token.service.ts";
 
 export const registerUser = async ({
@@ -34,6 +34,26 @@ export const registerUser = async ({
       name,
     },
   });
+
+  const tokens = await createTokens(user.id);
+
+  return { user, tokens };
+};
+
+export const loginUser = async ({ username, password }) => {
+  const user = await prisma.user.findUnique({
+    where: { username },
+  });
+
+  if (!user) {
+    throw createHttpError(401, "Invalid credentials");
+  }
+
+  const isPasswordValid = comparePassword(password, user.password);
+
+  if (!isPasswordValid) {
+    throw createHttpError(401, "Invalid credentials");
+  }
 
   const tokens = await createTokens(user.id);
 
