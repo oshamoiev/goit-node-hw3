@@ -21,6 +21,7 @@ export const register = async (
 
   res.status(201).json({
     accessToken: tokens.accessToken,
+    refreshToken: tokens.refreshToken,
     user: {
       id: user.id,
       username: user.username,
@@ -40,6 +41,7 @@ export const login = async (
 
   res.status(200).json({
     accessToken: tokens.accessToken,
+    refreshToken: tokens.refreshToken,
     user: {
       id: user.id,
       username: user.username,
