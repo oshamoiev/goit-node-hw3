@@ -1,9 +1,10 @@
-import express from "express";
-import type { NextFunction, Request, Response } from "express";
-import swaggerUi from "swagger-ui-express";
 import cookieParser from "cookie-parser";
+import type { NextFunction, Request, Response } from "express";
+import express from "express";
+import swaggerUi from "swagger-ui-express";
 
 import { generateOpenApiDocument } from "./src/openapi.ts";
+import authRouter from "./src/routes/auth.routes.ts";
 
 const app = express();
 
@@ -12,12 +13,15 @@ app.use(cookieParser());
 const openApiDocument = generateOpenApiDocument();
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));
 
+app.use("/api/auth", authRouter);
+
 // 404 Not Found handler - must be after all routes
 app.use((_req: Request, res: Response) => {
   res.status(404).json({ error: "Not found" });
 });
 
 // Error handling middleware
+// biome-ignore lint/suspicious/noExplicitAny: Express error middleware receives errors with varying shapes.
 app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   console.error(err);
 
@@ -52,7 +56,5 @@ app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(
-    `Server is running on port ${PORT}: http://localhost:${PORT}/api-docs`,
-  );
+  console.log(`Server is running on port ${PORT}: http://localhost:${PORT}/api-docs`);
 });
