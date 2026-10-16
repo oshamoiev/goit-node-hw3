@@ -122,7 +122,7 @@ boilerplate/
 │   │   ├── auth.controller.ts
 │   │   └── announcements.controller.ts
 │   ├── middleware/
-│   │   ├── authenticate.ts
+│   │   ├── auth.middleware.ts
 │   │   └── validate.ts
 │   ├── routes/
 │   │   ├── auth.routes.ts

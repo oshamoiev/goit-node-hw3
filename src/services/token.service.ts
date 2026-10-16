@@ -19,12 +19,12 @@ export const createTokens = async (userId: number) => {
   return { accessToken, refreshToken };
 };
 
-const createAccessToken = (userId: number) => {
-  return jwt.sign({ sub: String(userId) }, config.jwtSecret, {
+export const getAccessTokenPayload = (token: string) =>
+  jwt.verify(token, config.jwtSecret) as jwt.JwtPayload;
+
+const createAccessToken = (userId: number) =>
+  jwt.sign({ sub: String(userId) }, config.jwtSecret, {
     expiresIn: ACCESS_TOKEN_LIFETIME / 1000,
   });
-};
 
-const createRefreshToken = () => {
-  return crypto.randomBytes(40).toString("hex");
-};
+const createRefreshToken = () => crypto.randomBytes(40).toString("hex");
