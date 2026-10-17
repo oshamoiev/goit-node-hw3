@@ -49,7 +49,7 @@ export const loginUser = async ({ username, password }: { username: string; pass
     throw createHttpError(401, "Invalid credentials");
   }
 
-  const isPasswordValid = comparePassword(password, user.password);
+  const isPasswordValid: boolean = await comparePassword(password, user.password);
 
   if (!isPasswordValid) {
     throw createHttpError(401, "Invalid credentials");
