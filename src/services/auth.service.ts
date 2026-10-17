@@ -61,7 +61,7 @@ export const loginUser = async ({ username, password }: { username: string; pass
 };
 
 export const rotateRefreshToken = async (refreshTokenString: string) => {
-  const storedRefreshToken = await prisma.refreshToken.findFirst({
+  const storedRefreshToken = await prisma.refreshToken.findUnique({
     where: { token: refreshTokenString },
   });
 
