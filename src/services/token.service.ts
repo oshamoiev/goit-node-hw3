@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import createHttpError from "http-errors";
 import jwt from "jsonwebtoken";
 import prisma from "../../prisma/client.ts";
@@ -61,6 +62,6 @@ const createAccessToken = (userId: number) =>
   });
 
 const createRefreshToken = (userId: number) =>
-  jwt.sign({ sub: String(userId) }, config.refreshTokenSecret, {
+  jwt.sign({ sub: String(userId), jti: randomUUID() }, config.refreshTokenSecret, {
     expiresIn: REFRESH_TOKEN_LIFETIME / 1000,
   });
