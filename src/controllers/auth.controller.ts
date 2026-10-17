@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import createHttpError from "http-errors";
 import { REFRESH_TOKEN_LIFETIME } from "../constants/time.ts";
 import {
+  findUserById,
   loginUser,
   registerUser,
   removeRefreshToken,
@@ -79,6 +80,33 @@ export const logout = async (req: Request, res: Response) => {
   removeRefreshTokenCookie(res);
 
   res.status(204).end();
+};
+
+export const me = async (req: Request, res: Response) => {
+  const subject = req.accessTokenPayload?.sub;
+
+  if (typeof subject !== "string") {
+    throw createHttpError(401, "Invalid token subject");
+  }
+
+  const userId = Number(subject);
+
+  if (!Number.isSafeInteger(userId) || userId <= 0) {
+    throw createHttpError(401, "Invalid token subject");
+  }
+
+  const user = await findUserById(userId);
+
+  if (!user) {
+    throw createHttpError(404, "User not found");
+  }
+
+  res.status(200).json({
+    id: user.id,
+    username: user.username,
+    email: user.email,
+    name: user.name,
+  });
 };
 
 const setRefreshTokenCookie = (res: Response, refreshToken: string) => {

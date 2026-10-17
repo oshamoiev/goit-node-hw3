@@ -84,3 +84,9 @@ export const removeRefreshToken = async (token: string) => {
     where: { token: token },
   });
 };
+
+export const findUserById = async (userId: number) => {
+  return await prisma.user.findUnique({
+    where: { id: userId },
+  });
+};
