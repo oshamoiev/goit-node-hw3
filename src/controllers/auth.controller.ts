@@ -74,9 +74,11 @@ export const logout = async (req: Request, res: Response) => {
   const refreshTokenString =
     req.cookies.refreshToken || (req.body as { refreshToken?: string }).refreshToken;
 
-  if (refreshTokenString) {
-    await removeRefreshToken(refreshTokenString);
+  if (!refreshTokenString) {
+    throw createHttpError(400, "Refresh token not provided");
   }
+
+  await removeRefreshToken(refreshTokenString);
   removeRefreshTokenCookie(res);
 
   res.status(204).end();
