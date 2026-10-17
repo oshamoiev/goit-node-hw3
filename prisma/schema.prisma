@@ -15,6 +15,7 @@ model User {
   name          String
   createdAt     DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
   refreshTokens RefreshToken[]
+  announcements Announcement[]
 
   @@map("user")
 }
@@ -29,4 +30,18 @@ model RefreshToken {
 
   @@index([userId])
   @@map("refresh_token")
+}
+
+model Announcement {
+  id          Int                   @id @default(autoincrement())
+  title       String
+  description String
+  price       Decimal               @db.Decimal(10, 2)
+  category    String
+  createdAt   DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime              @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  userId      Int                   @map("user_id")
+  user        User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("announcement")
 }
