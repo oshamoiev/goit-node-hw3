@@ -4,14 +4,24 @@ import { registry } from "../openapi.ts";
 export const RegisterSchema = registry.register(
   "Register",
   z.object({
-    username: z
-      .string()
-      .regex(/^[a-zA-Z0-9_]+$/)
-      .min(3)
-      .max(30),
+    username: z.string().min(3).max(30),
     email: z.email(),
-    password: z.string().min(8),
-    name: z.string().min(1).max(100),
+    password: z.string().min(6),
+    name: z.string().min(2),
+  }),
+);
+
+export const RefreshSchema = registry.register(
+  "Refresh",
+  z.object({
+    refreshToken: z.string().min(1),
+  }),
+);
+
+export const LogoutSchema = registry.register(
+  "Logout",
+  z.object({
+    refreshToken: z.string().min(1),
   }),
 );
 
@@ -25,6 +35,8 @@ export const LoginSchema = registry.register(
 
 export type RegisterBody = z.infer<typeof RegisterSchema>;
 export type LoginBody = z.infer<typeof LoginSchema>;
+export type RefreshBody = z.infer<typeof RefreshSchema>;
+export type LogoutBody = z.infer<typeof LogoutSchema>;
 
 registry.registerPath({
   method: "post",
@@ -69,9 +81,17 @@ registry.registerPath({
   path: "/api/auth/refresh",
   tags: ["Auth"],
   summary: "Refresh token pair",
+  request: {
+    body: {
+      content: {
+        "application/json": { schema: RefreshSchema },
+      },
+    },
+  },
   responses: {
     200: { description: "Tokens refreshed successfully" },
     401: { description: "Invalid or expired refresh token" },
+    422: { description: "Validation error" },
   },
 });
 
@@ -79,8 +99,28 @@ registry.registerPath({
   method: "post",
   path: "/api/auth/logout",
   tags: ["Auth"],
-  summary: "Logout user",
+  summary: "Logout current session",
+  security: [{ bearerAuth: [] }],
+  request: {
+    body: {
+      content: {
+        "application/json": { schema: LogoutSchema },
+      },
+    },
+  },
   responses: {
     204: { description: "Logged out successfully" },
+  },
+});
+
+registry.registerPath({
+  method: "get",
+  path: "/api/auth/me",
+  tags: ["Auth"],
+  summary: "Get current user profile",
+  security: [{ bearerAuth: [] }],
+  responses: {
+    200: { description: "Current user profile" },
+    401: { description: "Authentication required" },
   },
 });
