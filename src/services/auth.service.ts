@@ -1,7 +1,7 @@
 import createHttpError from "http-errors";
 import prisma from "../../prisma/client.ts";
 import { comparePassword, hashPassword } from "./password.service.ts";
-import { createTokens } from "./token.service.ts";
+import * as tokenService from "./token.service.ts";
 
 export const registerUser = async ({
   username,
@@ -35,7 +35,7 @@ export const registerUser = async ({
     },
   });
 
-  const tokens = await createTokens(user.id);
+  const tokens = await tokenService.createTokens(user.id);
 
   return { user, tokens };
 };
@@ -55,33 +55,18 @@ export const loginUser = async ({ username, password }: { username: string; pass
     throw createHttpError(401, "Invalid credentials");
   }
 
-  const tokens = await createTokens(user.id);
+  const tokens = await tokenService.createTokens(user.id);
 
   return { user, tokens };
 };
 
-export const rotateRefreshToken = async (refreshTokenString: string) => {
-  const storedRefreshToken = await prisma.refreshToken.findUnique({
-    where: { token: refreshTokenString },
-  });
-
-  if (!storedRefreshToken) {
-    throw createHttpError(401, "Invalid refresh token");
-  }
-
-  if (new Date() > storedRefreshToken.expiresAt) {
-    await prisma.refreshToken.delete({ where: { id: storedRefreshToken.id } });
-    throw createHttpError(401, "Refresh token expired");
-  }
-
-  await prisma.refreshToken.delete({ where: { id: storedRefreshToken.id } });
-
-  return await createTokens(storedRefreshToken.userId);
+export const refreshTokens = async (refreshToken: string) => {
+  return tokenService.refreshTokens(refreshToken);
 };
 
-export const removeRefreshToken = async (token: string) => {
+export const removeRefreshToken = async (userId: number, token: string) => {
   await prisma.refreshToken.deleteMany({
-    where: { token: token },
+    where: { userId, token },
   });
 };
 
