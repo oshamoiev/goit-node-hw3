@@ -36,7 +36,7 @@ export const AnnouncementQuerySchema = registry.register(
 export const AnnouncementIdSchema = registry.register(
   "AnnouncementId",
   z.object({
-    id: z.string().regex(/^\d+$/, "id must be an integer"),
+    id: z.string().regex(/^\d{1,9}$/, "id must be an integer"),
   }),
 );
 
