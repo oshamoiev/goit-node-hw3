@@ -2,7 +2,10 @@ import type { NextFunction, Request, Response } from "express";
 import express from "express";
 import swaggerUi from "swagger-ui-express";
 
+import "./src/openapi/announcement.openapi.ts";
+import "./src/openapi/auth.openapi.ts";
 import { generateOpenApiDocument } from "./src/openapi.ts";
+import announcementRoutes from "./src/routes/announcement.routes.ts";
 import authRouter from "./src/routes/auth.routes.ts";
 
 const app = express();
@@ -12,6 +15,7 @@ const openApiDocument = generateOpenApiDocument();
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));
 
 app.use("/api/auth", authRouter);
+app.use("/api/announcements", announcementRoutes);
 
 // 404 Not Found handler - must be after all routes
 app.use((_req: Request, res: Response) => {
