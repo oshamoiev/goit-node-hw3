@@ -3,7 +3,7 @@ import { LoginSchema, RefreshSchema, RegisterSchema } from "../validators/auth.v
 
 registry.registerPath({
   method: "post",
-  path: "/api/auth/register",
+  path: "/auth/register",
   tags: ["Auth"],
   summary: "Register a new user",
   request: {
@@ -22,7 +22,7 @@ registry.registerPath({
 
 registry.registerPath({
   method: "post",
-  path: "/api/auth/login",
+  path: "/auth/login",
   tags: ["Auth"],
   summary: "Login user",
   request: {
@@ -41,7 +41,7 @@ registry.registerPath({
 
 registry.registerPath({
   method: "post",
-  path: "/api/auth/refresh",
+  path: "/auth/refresh",
   tags: ["Auth"],
   summary: "Refresh token pair",
   request: {
@@ -60,7 +60,7 @@ registry.registerPath({
 
 registry.registerPath({
   method: "post",
-  path: "/api/auth/logout",
+  path: "/auth/logout",
   tags: ["Auth"],
   summary: "Logout current session",
   security: [{ bearerAuth: [] }],
@@ -71,7 +71,7 @@ registry.registerPath({
 
 registry.registerPath({
   method: "get",
-  path: "/api/auth/me",
+  path: "/auth/me",
   tags: ["Auth"],
   summary: "Get current user profile",
   security: [{ bearerAuth: [] }],

@@ -14,8 +14,8 @@ app.use(express.json());
 const openApiDocument = generateOpenApiDocument();
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));
 
-app.use("/api/auth", authRouter);
-app.use("/api/announcements", announcementRoutes);
+app.use("/auth", authRouter);
+app.use("/announcements", announcementRoutes);
 
 // 404 Not Found handler - must be after all routes
 app.use((_req: Request, res: Response) => {

@@ -8,7 +8,7 @@ import {
 
 registry.registerPath({
   method: "get",
-  path: "/api/announcements",
+  path: "/announcements",
   tags: ["Announcements"],
   summary: "List announcements with pagination, search and sorting",
   request: { query: AnnouncementQuerySchema },
@@ -20,7 +20,7 @@ registry.registerPath({
 
 registry.registerPath({
   method: "get",
-  path: "/api/announcements/{id}",
+  path: "/announcements/{id}",
   tags: ["Announcements"],
   summary: "Get a single announcement by id",
   request: { params: AnnouncementIdSchema },
@@ -33,7 +33,7 @@ registry.registerPath({
 
 registry.registerPath({
   method: "post",
-  path: "/api/announcements",
+  path: "/announcements",
   tags: ["Announcements"],
   summary: "Create an announcement",
   security: [{ bearerAuth: [] }],
@@ -53,7 +53,7 @@ registry.registerPath({
 
 registry.registerPath({
   method: "patch",
-  path: "/api/announcements/{id}",
+  path: "/announcements/{id}",
   tags: ["Announcements"],
   summary: "Partially update own announcement",
   security: [{ bearerAuth: [] }],
@@ -76,7 +76,7 @@ registry.registerPath({
 
 registry.registerPath({
   method: "delete",
-  path: "/api/announcements/{id}",
+  path: "/announcements/{id}",
   tags: ["Announcements"],
   summary: "Delete own announcement",
   security: [{ bearerAuth: [] }],
