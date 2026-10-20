@@ -14,7 +14,7 @@ registry.registerPath({
   request: { query: AnnouncementQuerySchema },
   responses: {
     200: { description: "Announcements with pagination" },
-    422: { description: "Validation error" },
+    400: { description: "Invalid query parameters" },
   },
 });
 
@@ -26,8 +26,8 @@ registry.registerPath({
   request: { params: AnnouncementIdSchema },
   responses: {
     200: { description: "Announcement with author data" },
+    400: { description: "Invalid parameters" },
     404: { description: "Announcement not found" },
-    422: { description: "Validation error" },
   },
 });
 
@@ -70,6 +70,7 @@ registry.registerPath({
     401: { description: "Authentication required" },
     403: { description: "Access denied" },
     404: { description: "Announcement not found" },
+    400: { description: "Invalid parameters" },
     422: { description: "Validation error" },
   },
 });
@@ -83,6 +84,7 @@ registry.registerPath({
   request: { params: AnnouncementIdSchema },
   responses: {
     204: { description: "Announcement deleted" },
+    400: { description: "Invalid parameters" },
     401: { description: "Authentication required" },
     403: { description: "Access denied" },
     404: { description: "Announcement not found" },
