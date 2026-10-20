@@ -1,12 +1,7 @@
 import type { Request, Response } from "express";
 import createHttpError from "http-errors";
 import * as authService from "../services/auth.service.ts";
-import type {
-  LoginBody,
-  LogoutBody,
-  RefreshBody,
-  RegisterBody,
-} from "../validators/auth.validator.ts";
+import type { LoginBody, RefreshBody, RegisterBody } from "../validators/auth.validator.ts";
 
 export const register = async (
   req: Request<Record<string, string>, unknown, RegisterBody>,
@@ -57,10 +52,10 @@ export const refresh = async (
 };
 
 export const logout = async (
-  req: Request<Record<string, string>, unknown, LogoutBody>,
+  req: Request<Record<string, string>, unknown, unknown>,
   res: Response,
 ) => {
-  await authService.removeRefreshToken(req.auth.userId, req.body.refreshToken);
+  await authService.logout(req.auth.userId);
   res.status(204).end();
 };
 

@@ -18,13 +18,6 @@ export const RefreshSchema = registry.register(
   }),
 );
 
-export const LogoutSchema = registry.register(
-  "Logout",
-  z.object({
-    refreshToken: z.string().min(1),
-  }),
-);
-
 export const LoginSchema = registry.register(
   "Login",
   z.object({
@@ -36,4 +29,3 @@ export const LoginSchema = registry.register(
 export type RegisterBody = z.infer<typeof RegisterSchema>;
 export type LoginBody = z.infer<typeof LoginSchema>;
 export type RefreshBody = z.infer<typeof RefreshSchema>;
-export type LogoutBody = z.infer<typeof LogoutSchema>;

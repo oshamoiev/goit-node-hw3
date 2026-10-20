@@ -55,6 +55,7 @@ export const loginUser = async ({ username, password }: { username: string; pass
     throw createHttpError(401, "Invalid credentials");
   }
 
+  await removeRefreshToken(user.id);
   const tokens = await tokenService.createTokens(user.id);
 
   return { user, tokens };
@@ -64,14 +65,18 @@ export const refreshTokens = async (refreshToken: string) => {
   return tokenService.refreshTokens(refreshToken);
 };
 
-export const removeRefreshToken = async (userId: number, token: string) => {
-  await prisma.refreshToken.deleteMany({
-    where: { userId, token },
-  });
+export const logout = async (userId: number) => {
+  await removeRefreshToken(userId);
 };
 
 export const findUserById = async (userId: number) => {
   return await prisma.user.findUnique({
     where: { id: userId },
+  });
+};
+
+const removeRefreshToken = async (userId: number) => {
+  await prisma.refreshToken.deleteMany({
+    where: { userId },
   });
 };

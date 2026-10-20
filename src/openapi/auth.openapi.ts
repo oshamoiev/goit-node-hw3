@@ -1,10 +1,5 @@
 import { registry } from "../openapi.ts";
-import {
-  LoginSchema,
-  LogoutSchema,
-  RefreshSchema,
-  RegisterSchema,
-} from "../validators/auth.validator.ts";
+import { LoginSchema, RefreshSchema, RegisterSchema } from "../validators/auth.validator.ts";
 
 registry.registerPath({
   method: "post",
@@ -69,13 +64,6 @@ registry.registerPath({
   tags: ["Auth"],
   summary: "Logout current session",
   security: [{ bearerAuth: [] }],
-  request: {
-    body: {
-      content: {
-        "application/json": { schema: LogoutSchema },
-      },
-    },
-  },
   responses: {
     204: { description: "Logged out successfully" },
   },
