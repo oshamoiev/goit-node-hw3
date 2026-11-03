@@ -26,6 +26,7 @@ app.use(
   }),
 );
 app.use(express.json());
+
 const openApiDocument = generateOpenApiDocument();
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));
 
