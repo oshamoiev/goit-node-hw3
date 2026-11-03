@@ -1,6 +1,9 @@
+import cors from "cors";
 import type { NextFunction, Request, Response } from "express";
 import express from "express";
 import swaggerUi from "swagger-ui-express";
+
+import { config } from "./src/config.ts";
 
 import "./src/openapi/announcement.openapi.ts";
 import "./src/openapi/auth.openapi.ts";
@@ -10,6 +13,12 @@ import authRouter from "./src/routes/auth.routes.ts";
 
 const app = express();
 
+app.use(
+  cors({
+    origin: config.allowedOrigins,
+    credentials: true,
+  }),
+);
 app.use(express.json());
 const openApiDocument = generateOpenApiDocument();
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));

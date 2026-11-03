@@ -47,9 +47,10 @@ DB_PASSWORD=password
 DATABASE_URL=postgresql://postgres:password@localhost:5432/announcements?schema=public
 ACCESS_TOKEN_SECRET=your-access-token-secret-at-least-256-bits-long
 REFRESH_TOKEN_SECRET=your-refresh-token-secret-at-least-256-bits-long
+ALLOWED_ORIGINS=http://localhost:8000,http://localhost:3000
 ```
 
-`DB_NAME`, `DB_USER` і `DB_PASSWORD` використовуються Docker Compose для створення бази даних і користувача PostgreSQL. `DATABASE_URL` має містити відповідні облікові дані та назву бази для підключення Prisma.
+`DB_NAME`, `DB_USER` і `DB_PASSWORD` використовуються Docker Compose для створення бази даних і користувача PostgreSQL. `DATABASE_URL` має містити відповідні облікові дані та назву бази для підключення Prisma. `ALLOWED_ORIGINS` — список дозволених origin-адрес для CORS, розділених комами; вкажіть адреси клієнтських застосунків, наприклад `http://localhost:8000`. Пробіли навколо адрес і порожні значення ігноруються.
 
 4. Запустіть PostgreSQL:
 
