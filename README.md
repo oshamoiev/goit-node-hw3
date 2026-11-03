@@ -41,18 +41,29 @@ cp .env.example .env
 3. Налаштуйте `.env`:
 
 ```env
+DB_NAME=announcements
+DB_USER=postgres
+DB_PASSWORD=password
 DATABASE_URL=postgresql://postgres:password@localhost:5432/announcements?schema=public
 ACCESS_TOKEN_SECRET=your-access-token-secret-at-least-256-bits-long
 REFRESH_TOKEN_SECRET=your-refresh-token-secret-at-least-256-bits-long
 ```
 
-4. Застосуйте міграцію:
+`DB_NAME`, `DB_USER` і `DB_PASSWORD` використовуються Docker Compose для створення бази даних і користувача PostgreSQL. `DATABASE_URL` має містити відповідні облікові дані та назву бази для підключення Prisma.
+
+4. Запустіть PostgreSQL:
+
+```bash
+docker compose up -d
+```
+
+5. Застосуйте міграцію:
 
 ```bash
 npm run prisma:migrate
 ```
 
-5. Запустіть проект:
+6. Запустіть проект:
 
 ```bash
 npm run dev
@@ -156,7 +167,7 @@ boilerplate/
 
 | Команда                   | Опис                                 |
 | ------------------------- | ------------------------------------ |
-| `npm run dev`             | Запуск з hot reload (`node --watch`) |
+| `npm run dev`             | Запуск з hot reload (`tsx watch app.ts`) |
 | `npm start`               | Запуск у виробничому режимі          |
 | `npm run prisma:migrate`  | Створення та застосування міграцій   |
 | `npm run prisma:generate` | Генерація Prisma Client              |
