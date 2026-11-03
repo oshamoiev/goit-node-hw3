@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:18.4
-    container_name: goit-node-hw2-pg
+    container_name: goit-node-hw3-pg
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
