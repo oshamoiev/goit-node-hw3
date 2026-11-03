@@ -7,6 +7,7 @@ import { config } from "./src/config.ts";
 
 import "./src/openapi/announcement.openapi.ts";
 import "./src/openapi/auth.openapi.ts";
+import helmet from "helmet";
 import { generateOpenApiDocument } from "./src/openapi.ts";
 import announcementRoutes from "./src/routes/announcement.routes.ts";
 import authRouter from "./src/routes/auth.routes.ts";
@@ -17,6 +18,11 @@ app.use(
   cors({
     origin: config.allowedOrigins,
     credentials: true,
+  }),
+);
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
   }),
 );
 app.use(express.json());
