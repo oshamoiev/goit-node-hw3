@@ -58,7 +58,10 @@ export const findAnnouncementById = async (id: number) => {
   });
 };
 
-export const createAnnouncement = async (userId: number, data: CreateAnnouncementBody) => {
+export const createAnnouncement = async (
+  userId: number,
+  data: CreateAnnouncementBody & { imageUrl?: string },
+) => {
   const announcement = await prisma.announcement.create({
     data: { ...data, userId },
     include: includeUser,
@@ -67,7 +70,10 @@ export const createAnnouncement = async (userId: number, data: CreateAnnouncemen
   return toAnnouncement(announcement);
 };
 
-export const updateAnnouncement = async (id: number, data: UpdateAnnouncementBody) => {
+export const updateAnnouncement = async (
+  id: number,
+  data: UpdateAnnouncementBody & { imageUrl?: string },
+) => {
   const announcement = await prisma.announcement.update({
     where: { id },
     data,

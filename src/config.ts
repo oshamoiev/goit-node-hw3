@@ -8,6 +8,9 @@ const env = z
     REFRESH_TOKEN_SECRET: z.string().min(1),
     ALLOWED_ORIGINS: z.string().optional().default(""),
     NODE_ENV: z.string().default("development"),
+    CLOUDINARY_CLOUD_NAME: z.string().min(1),
+    CLOUDINARY_API_KEY: z.string().min(1),
+    CLOUDINARY_API_SECRET: z.string().min(1),
   })
   .parse(process.env);
 
@@ -19,4 +22,7 @@ export const config = {
     .map((origin) => origin.trim())
     .filter(Boolean),
   nodeEnv: env.NODE_ENV,
+  cloudinaryCloudName: env.CLOUDINARY_CLOUD_NAME,
+  cloudinaryApiKey: env.CLOUDINARY_API_KEY,
+  cloudinaryApiSecret: env.CLOUDINARY_API_SECRET,
 };

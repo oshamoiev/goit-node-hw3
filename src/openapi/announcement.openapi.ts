@@ -2,8 +2,8 @@ import { registry } from "../openapi.ts";
 import {
   AnnouncementIdSchema,
   AnnouncementQuerySchema,
-  CreateAnnouncementSchema,
-  UpdateAnnouncementSchema,
+  CreateAnnouncementMultipartSchema,
+  UpdateAnnouncementMultipartSchema,
 } from "../validators/announcement.validator.ts";
 
 registry.registerPath({
@@ -40,13 +40,18 @@ registry.registerPath({
   request: {
     body: {
       content: {
-        "application/json": { schema: CreateAnnouncementSchema },
+        "multipart/form-data": {
+          schema: CreateAnnouncementMultipartSchema,
+        },
       },
     },
   },
   responses: {
     201: { description: "Announcement created" },
+    400: { description: "Multiple files or unexpected file field" },
     401: { description: "Authentication required" },
+    413: { description: "Image larger than 5 MB" },
+    415: { description: "Unsupported media type" },
     422: { description: "Validation error" },
   },
 });
@@ -61,16 +66,20 @@ registry.registerPath({
     params: AnnouncementIdSchema,
     body: {
       content: {
-        "application/json": { schema: UpdateAnnouncementSchema },
+        "multipart/form-data": {
+          schema: UpdateAnnouncementMultipartSchema,
+        },
       },
     },
   },
   responses: {
     200: { description: "Announcement updated" },
+    400: { description: "Invalid parameters, multiple files, or unexpected file field" },
     401: { description: "Authentication required" },
     403: { description: "Access denied" },
     404: { description: "Announcement not found" },
-    400: { description: "Invalid parameters" },
+    413: { description: "Image larger than 5 MB" },
+    415: { description: "Unsupported media type" },
     422: { description: "Validation error" },
   },
 });

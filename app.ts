@@ -1,6 +1,7 @@
 import cors from "cors";
 import type { NextFunction, Request, Response } from "express";
 import express from "express";
+import multer from "multer";
 import swaggerUi from "swagger-ui-express";
 
 import { config } from "./src/config.ts";
@@ -46,6 +47,16 @@ app.use((_req: Request, res: Response) => {
 // biome-ignore lint/suspicious/noExplicitAny: Express error middleware receives errors with varying shapes.
 app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
   console.error(err);
+
+  if (err instanceof multer.MulterError) {
+    if (err.code === "LIMIT_FILE_SIZE") {
+      return res.status(413).json({ error: "Uploaded image must be 5 MB or smaller" });
+    }
+
+    if (err.code === "LIMIT_FILE_COUNT" || err.code === "LIMIT_UNEXPECTED_FILE") {
+      return res.status(400).json({ error: "Only one image can be uploaded in the image field" });
+    }
+  }
 
   if (err.type === "entity.parse.failed") {
     return res.status(400).json({

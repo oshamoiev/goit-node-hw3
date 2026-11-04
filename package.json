@@ -6,6 +6,8 @@
   "scripts": {
     "start": "tsx app.ts",
     "dev": "tsx watch app.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "lint": "biome lint .",
     "format": "biome format --write .",
     "check": "biome check .",
@@ -51,6 +53,7 @@
     "@types/swagger-ui-express": "^4.1.8",
     "prisma": "^7.6.0",
     "tsx": "^4.21.0",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.2",
+    "vitest": "^5.1.0"
   }
 }
