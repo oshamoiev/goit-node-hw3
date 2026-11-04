@@ -37,6 +37,11 @@ export const createAnnouncement = async (
 ) => {
   const announcement = await announcementService.createAnnouncement(req.auth.userId, req.body);
 
+  req.log.info(
+    { announcementId: announcement.id, userId: req.auth.userId },
+    "Announcement created",
+  );
+
   res.status(201).json(announcement);
 };
 
@@ -49,6 +54,8 @@ export const updateAnnouncement = async (
 
   const announcement = await announcementService.updateAnnouncement(id, req.body);
 
+  req.log.info({ announcementId: id, userId: req.auth.userId }, "Announcement updated");
+
   res.status(200).json(announcement);
 };
 
@@ -60,6 +67,8 @@ export const deleteAnnouncement = async (
   await checkOwnership(id, req.auth.userId);
 
   await announcementService.deleteAnnouncement(id);
+
+  req.log.info({ announcementId: id, userId: req.auth.userId }, "Announcement deleted");
 
   res.status(204).end();
 };

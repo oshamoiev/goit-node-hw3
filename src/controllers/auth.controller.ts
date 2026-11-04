@@ -9,6 +9,8 @@ export const register = async (
 ) => {
   const { user, tokens } = await authService.registerUser(req.body);
 
+  req.log.info({ userId: user.id }, "User registered");
+
   res.status(201).json({
     accessToken: tokens.accessToken,
     refreshToken: tokens.refreshToken,
@@ -26,6 +28,8 @@ export const login = async (
   res: Response,
 ) => {
   const { user, tokens } = await authService.loginUser(req.body);
+
+  req.log.info({ userId: user.id }, "User logged in");
 
   res.status(200).json({
     accessToken: tokens.accessToken,
@@ -45,6 +49,8 @@ export const refresh = async (
 ) => {
   const tokens = await authService.refreshTokens(req.body.refreshToken);
 
+  req.log.info("Tokens refreshed");
+
   res.status(200).json({
     accessToken: tokens.accessToken,
     refreshToken: tokens.refreshToken,
@@ -56,6 +62,9 @@ export const logout = async (
   res: Response,
 ) => {
   await authService.logout(req.auth.userId);
+
+  req.log.info({ userId: req.auth.userId }, "User logged out");
+
   res.status(204).end();
 };
 

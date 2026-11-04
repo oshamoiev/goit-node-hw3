@@ -7,6 +7,7 @@ const env = z
     ACCESS_TOKEN_SECRET: z.string().min(1),
     REFRESH_TOKEN_SECRET: z.string().min(1),
     ALLOWED_ORIGINS: z.string().optional().default(""),
+    NODE_ENV: z.string().default("development"),
   })
   .parse(process.env);
 
@@ -17,4 +18,5 @@ export const config = {
   allowedOrigins: env.ALLOWED_ORIGINS.split(",")
     .map((origin) => origin.trim())
     .filter(Boolean),
+  nodeEnv: env.NODE_ENV,
 };

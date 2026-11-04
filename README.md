@@ -48,9 +48,10 @@ DATABASE_URL=postgresql://postgres:password@localhost:5432/announcements?schema=
 ACCESS_TOKEN_SECRET=your-access-token-secret-at-least-256-bits-long
 REFRESH_TOKEN_SECRET=your-refresh-token-secret-at-least-256-bits-long
 ALLOWED_ORIGINS=http://localhost:8000,http://localhost:3000
+NODE_ENV=development
 ```
 
-`DB_NAME`, `DB_USER` і `DB_PASSWORD` використовуються Docker Compose для створення бази даних і користувача PostgreSQL. `DATABASE_URL` має містити відповідні облікові дані та назву бази для підключення Prisma. `ALLOWED_ORIGINS` — список дозволених origin-адрес для CORS, розділених комами; вкажіть адреси клієнтських застосунків, наприклад `http://localhost:8000`. Пробіли навколо адрес і порожні значення ігноруються.
+`DB_NAME`, `DB_USER` і `DB_PASSWORD` використовуються Docker Compose для створення бази даних і користувача PostgreSQL. `DATABASE_URL` має містити відповідні облікові дані та назву бази для підключення Prisma. `ALLOWED_ORIGINS` — список дозволених origin-адрес для CORS, розділених комами; вкажіть адреси клієнтських застосунків, наприклад `http://localhost:8000`. Пробіли навколо адрес і порожні значення ігноруються. `NODE_ENV` визначає режим роботи логера: за замовчуванням `development`, для production задайте `production`. У режимі розробки логи кольорові й зручні для читання завдяки `pino-pretty`; у production вони виводяться у структурованому JSON.
 
 4. Запустіть PostgreSQL:
 
