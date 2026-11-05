@@ -170,17 +170,6 @@ npm test
 - **CORS** дозволяє запити лише з origin-адрес зі `ALLOWED_ORIGINS`. Запит з іншого origin отримує `403` з відповіддю `{"error": "Origin not allowed by CORS"}`. Запити без заголовка `Origin` (наприклад, `curl`) не блокуються.
 - **Rate limiting** обмежує маршрути `/auth/*` до 10 запитів з однієї IP-адреси за 15 хвилин. Після перевищення сервер повертає `429` з відповіддю `{"error": "Too many requests, please try again later"}`.
 
-## Бойлерплейт
-
-Мінімальний стартовий набір:
-
-- `package.json` з усіма залежностями
-- `tsconfig.json` з налаштуваннями TypeScript
-- `src/openapi.ts` з ініціалізованим registry та `bearerAuth`
-- `prisma/client.ts` з ініціалізованим Prisma Client (PostgreSQL через `@prisma/adapter-pg`)
-- `prisma.config.ts` з конфігурацією Prisma
-- `.env.example` з шаблоном змінних середовища
-
 ## Доступні скрипти
 
 | Команда                   | Опис                                       |
