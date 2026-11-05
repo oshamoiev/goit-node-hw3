@@ -175,7 +175,7 @@ boilerplate/
 
 | Команда                   | Опис                                 |
 | ------------------------- | ------------------------------------ |
-| `npm run dev`             | Запуск з hot reload (`tsx watch app.ts`) |
+| `npm run dev`             | Запуск з hot reload (`tsx watch index.ts`) |
 | `npm start`               | Запуск у виробничому режимі          |
 | `npm run prisma:migrate`  | Створення та застосування міграцій   |
 | `npm run prisma:generate` | Генерація Prisma Client              |

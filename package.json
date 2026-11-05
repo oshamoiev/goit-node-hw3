@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsx app.ts",
-    "dev": "tsx watch app.ts",
+    "start": "tsx index.ts",
+    "dev": "tsx watch index.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "biome lint .",
