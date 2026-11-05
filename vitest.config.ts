@@ -6,5 +6,7 @@ export default defineConfig({
     env: {
       DATABASE_URL: process.env.TEST_DATABASE_URL,
     },
+    setupFiles: ["./tests/setup.ts"],
+    fileParallelism: false,
   },
 });
