@@ -74,6 +74,34 @@ npm run prisma:migrate
 npm run dev
 ```
 
+## Тестова база даних
+
+Інтеграційні тести працюють з окремою базою даних, щоб не змінювати дані розробки. Назва цієї бази має закінчуватися на `_test`, інакше скрипт міграції завершиться з помилкою.
+
+1. Додайте до `.env` змінну `TEST_DATABASE_URL` з адресою тестової бази:
+
+```env
+TEST_DATABASE_URL="postgresql://postgres:password@localhost:5432/billboard_test?schema=public"
+```
+
+2. Створіть базу в запущеному контейнері PostgreSQL (замініть `<DB_USER>` на значення `DB_USER` з `.env`):
+
+```bash
+docker compose exec postgres psql -U <DB_USER> -c "CREATE DATABASE billboard_test;"
+```
+
+3. Застосуйте міграції до тестової бази:
+
+```bash
+npm run db:migrate:test
+```
+
+4. Запустіть тести:
+
+```bash
+npm test
+```
+
 ## Маршрути
 
 ### Auth

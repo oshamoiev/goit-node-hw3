@@ -14,7 +14,8 @@
     "check:fix": "biome check --write .",
     "typecheck": "tsc --noEmit",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:generate": "prisma generate"
+    "prisma:generate": "prisma generate",
+    "db:migrate:test": "tsx scripts/migrate-test.ts"
   },
   "keywords": [],
   "author": "",
