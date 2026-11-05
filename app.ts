@@ -1,6 +1,7 @@
 import cors from "cors";
 import type { NextFunction, Request, Response } from "express";
 import express from "express";
+import createHttpError from "http-errors";
 import multer from "multer";
 import swaggerUi from "swagger-ui-express";
 
@@ -19,7 +20,13 @@ const app = express();
 
 app.use(
   cors({
-    origin: config.allowedOrigins,
+    origin: (origin, callback) => {
+      if (!origin || config.allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      callback(createHttpError(403, "Origin not allowed by CORS"));
+    },
     credentials: true,
   }),
 );
@@ -46,7 +53,7 @@ app.use((_req: Request, res: Response) => {
 // Error handling middleware
 // biome-ignore lint/suspicious/noExplicitAny: Express error middleware receives errors with varying shapes.
 app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-  console.error(err);
+  logger.error({ err }, "Request failed");
 
   if (err instanceof multer.MulterError) {
     if (err.code === "LIMIT_FILE_SIZE") {
