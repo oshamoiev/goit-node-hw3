@@ -23,6 +23,13 @@ REST API для дошки оголошень з JWT-автентифікаці�
 | @asteasolutions/zod-to-openapi | Генерація OpenAPI документації  |
 | swagger-ui-express             | Swagger UI                      |
 | dotenv                         | Змінні середовища               |
+| helmet                         | Безпечні HTTP-заголовки         |
+| cors                           | Обмеження за origin             |
+| express-rate-limit             | Обмеження запитів до `/auth`    |
+| pino, pino-http                | Логування                       |
+| multer                         | Завантаження файлів             |
+| cloudinary                     | Зберігання зображень            |
+| Vitest, supertest              | Тестування                      |
 
 ## Встановлення
 
@@ -41,10 +48,10 @@ cp .env.example .env
 3. Налаштуйте `.env`:
 
 ```env
-DB_NAME=announcements
+DB_NAME=billboard
 DB_USER=postgres
 DB_PASSWORD=password
-DATABASE_URL=postgresql://postgres:password@localhost:5432/announcements?schema=public
+DATABASE_URL=postgresql://postgres:password@localhost:5432/billboard?schema=public
 ACCESS_TOKEN_SECRET=your-access-token-secret-at-least-256-bits-long
 REFRESH_TOKEN_SECRET=your-refresh-token-secret-at-least-256-bits-long
 ALLOWED_ORIGINS=http://localhost:8000,http://localhost:3000
@@ -54,7 +61,7 @@ CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
 ```
 
-`DB_NAME`, `DB_USER` і `DB_PASSWORD` використовуються Docker Compose для створення бази даних і користувача PostgreSQL. `DATABASE_URL` має містити відповідні облікові дані та назву бази для підключення Prisma. `ALLOWED_ORIGINS` — список дозволених origin-адрес для CORS, розділених комами; вкажіть адреси клієнтських застосунків, наприклад `http://localhost:8000`. Пробіли навколо адрес і порожні значення ігноруються. `NODE_ENV` визначає режим роботи логера: за замовчуванням `development`, для production задайте `production`. У режимі розробки логи кольорові й зручні для читання завдяки `pino-pretty`; у production вони виводяться у структурованому JSON. Для завантаження зображень потрібні `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY` і `CLOUDINARY_API_SECRET` з налаштувань Cloudinary.
+`DB_NAME`, `DB_USER` і `DB_PASSWORD` використовуються Docker Compose для створення бази даних і користувача PostgreSQL. `DATABASE_URL` має містити відповідні облікові дані та назву бази для підключення Prisma. `ALLOWED_ORIGINS` — список дозволених origin-адрес для CORS, розділених комами; вкажіть адреси клієнтських застосунків, наприклад `http://localhost:8000`. Пробіли навколо адрес і порожні значення ігноруються. `NODE_ENV` визначає режим роботи логера: за замовчуванням `development`, для production задайте `production`. У режимі розробки логи кольорові й зручні для читання завдяки `pino-pretty`; у production вони виводяться у структурованому JSON. Для завантаження зображень потрібні `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY` і `CLOUDINARY_API_SECRET` з налаштувань Cloudinary. `PORT` необов'язковий, за замовчуванням `3000`.
 
 4. Запустіть PostgreSQL:
 
@@ -145,48 +152,23 @@ npm test
 
 ### POST /announcements
 
-| Поле          | Вимоги                                                 |
-| ------------- | ------------------------------------------------------ |
-| Поле          | Вимоги                                                           |
-| ------------- | ---------------------------------------------------------------- |
-| `title`       | рядок, обов'язковий, 5–50 символів                               |
-| `description` | рядок, обов'язковий, мінімум 10 символів                         |
-| `price`       | число, обов'язкове, не менше `0.01`                              |
-| `category`    | рядок, обов'язковий: `sale`, `service`, `job`, `other`           |
+| Поле          | Вимоги                                                                                   |
+| ------------- | ---------------------------------------------------------------------------------------- |
+| `title`       | рядок, обов'язковий, 5–50 символів                                                       |
+| `description` | рядок, обов'язковий, мінімум 10 символів                                                 |
+| `price`       | число, обов'язкове, не менше `0.01`                                                      |
+| `category`    | рядок, обов'язковий: `sale`, `service`, `job`, `other`                                   |
 | `image`       | необов'язковий файл зображення в multipart-полі з назвою `image`; до 5 МБ (JPEG, PNG, WebP або GIF) |
 
 Для створення й оновлення оголошення надсилайте `multipart/form-data`. Поля `title`, `description`, `price` і `category` передаються як текстові поля; файл фото передавайте в полі `image` (необов'язково, до 5 МБ; JPEG, PNG, WebP або GIF). Під час PATCH усі поля оголошення опціональні, але потрібно передати хоча б одне поле або файл `image`. `imageUrl` клієнт не передає — після завантаження Cloudinary API зберігає отриманий URL автоматично.
 
-## Структура проекту
+Помилки завантаження файлу: `400` — передано більше одного файлу або поле, відмінне від `image`; `413` — файл більший за 5 МБ; `415` — недозволений тип файлу.
 
-```
-boilerplate/
-├── prisma/
-│   ├── schema.prisma
-│   ├── client.ts
-│   └── migrations/
-├── src/
-│   ├── controllers/
-│   │   ├── auth.controller.ts
-│   │   └── announcements.controller.ts
-│   ├── middleware/
-│   │   ├── auth.middleware.ts
-│   │   └── validate.ts
-│   ├── routes/
-│   │   ├── auth.routes.ts
-│   │   └── announcements.routes.ts
-│   ├── validators/
-│   │   ├── auth.validator.ts
-│   │   └── announcements.validator.ts
-│   └── openapi.ts
-├── app.ts
-├── .env.example
-├── .env
-├── package.json
-├── tsconfig.json
-├── prisma.config.ts
-└── README.md
-```
+## Безпека
+
+- **Helmet** підключений в `app.ts` до всіх маршрутів і встановлює безпечні HTTP-заголовки.
+- **CORS** дозволяє запити лише з origin-адрес зі `ALLOWED_ORIGINS`. Запит з іншого origin отримує `403` з відповіддю `{"error": "Origin not allowed by CORS"}`. Запити без заголовка `Origin` (наприклад, `curl`) не блокуються.
+- **Rate limiting** обмежує маршрути `/auth/*` до 10 запитів з однієї IP-адреси за 15 хвилин. Після перевищення сервер повертає `429` з відповіддю `{"error": "Too many requests, please try again later"}`.
 
 ## Бойлерплейт
 
@@ -201,12 +183,18 @@ boilerplate/
 
 ## Доступні скрипти
 
-| Команда                   | Опис                                 |
-| ------------------------- | ------------------------------------ |
+| Команда                   | Опис                                       |
+| ------------------------- | ------------------------------------------ |
 | `npm run dev`             | Запуск з hot reload (`tsx watch index.ts`) |
-| `npm start`               | Запуск у виробничому режимі          |
-| `npm run prisma:migrate`  | Створення та застосування міграцій   |
-| `npm run prisma:generate` | Генерація Prisma Client              |
+| `npm start`               | Запуск без hot reload (`tsx index.ts`)     |
+| `npm run prisma:migrate`  | Створення та застосування міграцій         |
+| `npm run prisma:generate` | Генерація Prisma Client                    |
+| `npm run db:migrate:test` | Застосування міграцій до тестової бази     |
+| `npm test`                | Запуск тестів (Vitest)                     |
+| `npm run test:watch`      | Тести в режимі спостереження               |
+| `npm run typecheck`      | Перевірка типів TypeScript                 |
+| `npm run check`           | Biome: лінтинг і перевірка форматування    |
+| `npm run check:fix`       | Biome: автоматичне виправлення             |
 
 ## Документація API
 
@@ -217,8 +205,8 @@ Swagger UI доступний за адресою: http://localhost:3000/api-doc
 Три моделі: `User`, `RefreshToken`, `Announcement`.
 
 - `User` — `username` (унікальний), хешований `password`, `email` (унікальний), `name`, `createdAt`
-- `RefreshToken` — `token` (унікальний), зв'язок з `User`
-- `Announcement` — `title`, `description`, `price`, `category`, зв'язок з `User`, `createdAt`, `updatedAt`
+- `RefreshToken` — `token` (унікальний), `expiresAt`, зв'язок з `User`, `createdAt`
+- `Announcement` — `title`, `description`, `price` (Decimal(10, 2)), `category`, `imageUrl` (опціональний, URL з Cloudinary), зв'язок з `User`, `createdAt`, `updatedAt`
 
 ## Ліцензія
 
